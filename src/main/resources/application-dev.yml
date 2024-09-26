@@ -1,0 +1,86 @@
+server:
+  port: 30005
+
+spring:
+  time-zone: Africa/Nairobi
+
+
+
+  devtools:
+    restart:
+      enabled: true
+
+  application:
+    name: whoami
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MariaDBDialect
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/whoami?useTimezone=true&serverTimezone=Africa/Nairobi
+    username: root
+    password: meonubuntu
+
+    hikari:
+      registerMbeans: true
+      maximum-pool-size: 100
+      minimum-idle: 7
+      idle-timeout: 30000
+      leak-detection-threshold: 600000
+      pool-name: AuthServiceConnectionPool
+      validation-query: SELECT 1
+      validation-interval: 30000
+
+  #KafkaConfig
+  kafka:
+    bootstrap-servers: "localhost:9092"
+    consumer:
+      group-id: "bankwave-group"
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        isolation.level: read_committed
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+application:
+  name: "Whoami"
+  email:
+    from: no-reply@fortunecredit.co.ke
+
+
+eureka:
+  serviceUrl:
+    defaultZone: http://127.0.0.1:8761/eureka/
+  client:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,datasource,metrics,trace
+  endpoint:
+    health:
+      show-details: always
+  health:
+    diskspace:
+      enabled: true
+    db:
+      enabled: true
+
+
+logging:
+  file:
+    name: logs/authentication.log.txt
+  level:
+    root: info
+    org.springframework.web: info
+    org.springframework.security: info
+    org.hibernate: warn
+    apps.fortuneconnect.authentication: info
+
