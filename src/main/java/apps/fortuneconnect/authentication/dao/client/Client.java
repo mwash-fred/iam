@@ -1,10 +1,6 @@
 package apps.fortuneconnect.authentication.dao.client;
 
-import apps.fortuneconnect.authentication.dao.partner.Partner;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +8,18 @@ import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
+@Table(name = "clients")
 public class Client {
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String sn;
     @UuidGenerator
-    @Column(length = 36, unique = true, nullable = false, updatable = false)
-    private String uid;
+    @Column(nullable = false, unique = true)
+    private UUID uid;
     private String clientId;
     private Instant clientIdIssuedAt;
     private String clientSecret;
@@ -42,6 +41,4 @@ public class Client {
     private String tokenSettings;
     @Column(length = 500)
     private String logoUri;
-    @ManyToOne
-    private Partner partner;
 }

@@ -1,7 +1,6 @@
 package apps.fortuneconnect.authentication.resources;
 
 import apps.fortuneconnect.authentication.dao.client.ClientService;
-import apps.fortuneconnect.authentication.dao.partner.PartnerService;
 import apps.fortuneconnect.authentication.dao.user.UserService;
 import apps.fortuneconnect.authentication.dto.ClientDto;
 import apps.fortuneconnect.authentication.dto.PartnerDto;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthenticateRestController {
     private final UserService userService;
-    private final PartnerService partnerService;
     private final ClientService clientService;
 
     @PostMapping(value = "register-user", consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -29,15 +27,6 @@ public class AuthenticateRestController {
         userService.create(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new ResponseTemplate<Void>("User Created successfully", null, null)
-        );
-    }
-
-    @PostMapping(value = "register-partner", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> registerPartner(@RequestBody @Valid PartnerDto partnerDto){
-        partnerService.create(partnerDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new ResponseTemplate<Void>("Partner Created successfully", null, null)
         );
     }
 

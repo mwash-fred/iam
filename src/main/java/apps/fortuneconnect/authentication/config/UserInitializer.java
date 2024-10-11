@@ -35,15 +35,12 @@ public class UserInitializer implements ApplicationRunner {
 
         SystemSecurityContext.setSystemSecurityContext();
 
-
         if (!usersRepository.existsByEmail(ADMIN)) {
             String password = "password";
 
             User user = User.builder()
                     .phoneNo("254708881885")
-                    .verifiedFlag(true)
-                    .verifiedTime(LocalDateTime.now())
-                    .email("mwangiwilly395@gmail.com")
+                    .email(ADMIN)
                     .firstName("Wilfred")
                     .middleName("Mwangi")
                     .lastName("Njuguna")
@@ -51,6 +48,10 @@ public class UserInitializer implements ApplicationRunner {
                     .firstLogin(false)
                     .deletedFlag(false)
                     .twoFactorEnabled(false)
+                    .isEnabled(true)
+                    .isAccountExpired(false)
+                    .isAccountLocked(false)
+                    .isCredentialsExpired(false)
                     .build();
 
             usersRepository.save(user);

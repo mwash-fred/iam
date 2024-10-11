@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
@@ -14,7 +15,7 @@ public class LoginAttemptService {
     private final LoginAttemptRepository loginAttemptRepository;
 
     public static LoginAttemptsDto loginAttemptsModelToDTO(LoginAttempt loginAttempt) {
-        Function<LoginAttempt, LoginAttemptsDto> loginAttemptsDtoFunction = la -> new LoginAttemptsDto(la.getUid(),
+        Function<LoginAttempt, LoginAttemptsDto> loginAttemptsDtoFunction = la -> new LoginAttemptsDto(la.getUid().toString(),
                 la.getLoginTime(), la.getEventType(), la.isSuccess(), la.getIpAddress(), la.getPostedTime(), la.getModifiedTime());
 
         return loginAttemptsDtoFunction.apply(loginAttempt);

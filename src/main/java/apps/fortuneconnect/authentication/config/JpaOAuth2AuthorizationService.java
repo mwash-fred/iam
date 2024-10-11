@@ -26,6 +26,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 @Component
@@ -55,13 +56,13 @@ public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService
     @Override
     public void remove(OAuth2Authorization authorization) {
         Assert.notNull(authorization, "authorization cannot be null");
-        this.authorizationRepository.deleteById(authorization.getId());
+        this.authorizationRepository.deleteByUid(UUID.fromString(authorization.getId()));
     }
 
     @Override
     public OAuth2Authorization findById(String id) {
         Assert.hasText(id, "id cannot be empty");
-        return this.authorizationRepository.findById(id).map(this::toObject).orElse(null);
+        return this.authorizationRepository.findAuthorizationByUid(UUID.fromString(id)).map(this::toObject).orElse(null);
     }
 
     @Override
@@ -100,7 +101,7 @@ public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService
         }
 
         OAuth2Authorization.Builder builder = OAuth2Authorization.withRegisteredClient(registeredClient)
-                .id(entity.getUid())
+                .id(entity.getUid().toString())
                 .principalName(entity.getPrincipalName())
                 .authorizationGrantType(resolveAuthorizationGrantType(entity.getAuthorizationGrantType()))
                 .authorizedScopes(StringUtils.commaDelimitedListToSet(entity.getAuthorizedScopes()))
@@ -165,7 +166,7 @@ public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService
 
     private Authorization toEntity(OAuth2Authorization authorization) {
         Authorization entity = new Authorization();
-        entity.setUid(authorization.getId());
+        entity.setUid(UUID.fromString(authorization.getId()));
         entity.setRegisteredClientId(authorization.getRegisteredClientId());
         entity.setPrincipalName(authorization.getPrincipalName());
         entity.setAuthorizationGrantType(authorization.getAuthorizationGrantType().getValue());

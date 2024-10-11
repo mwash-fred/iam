@@ -16,12 +16,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    database-platform: org.hibernate.dialect.MariaDBDialect
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/whoami?useTimezone=true&serverTimezone=Africa/Nairobi
-    username: root
-    password: meonubuntu
+    url: jdbc:postgresql://localhost:5432/whoami
+    username: admin
+    password: educacion
+    driver-class-name: org.postgresql.Driver
 
     hikari:
       registerMbeans: true
@@ -37,7 +36,7 @@ spring:
   kafka:
     bootstrap-servers: "localhost:9092"
     consumer:
-      group-id: "bankwave-group"
+      group-id: "elimika-group"
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -82,5 +81,4 @@ logging:
     org.springframework.web: info
     org.springframework.security: info
     org.hibernate: warn
-    apps.fortuneconnect.authentication: info
 

@@ -1,20 +1,18 @@
 package apps.fortuneconnect.authentication.dao.consent;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 @Entity
 @IdClass(AuthorizationConsent.AuthorizationConsentId.class)
+@Table(name = "authorization_consent")
 public class AuthorizationConsent {
     @Id
     private String registeredClientId;
     @Id
     private String principalName;
-    @Column(length = 1000)
+    @Column(length = 1000, name = "authorities")
     private String authorities;
 
     public String getRegisteredClientId() {

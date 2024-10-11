@@ -5,8 +5,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
+import java.util.UUID;
 
-public interface AuthorizationRepository extends JpaRepository<Authorization, String> {
+public interface AuthorizationRepository extends JpaRepository<Authorization, Long> {
     Optional<Authorization> findByState(String state);
     Optional<Authorization> findByAuthorizationCodeValue(String authorizationCode);
     Optional<Authorization> findByAccessTokenValue(String accessToken);
@@ -23,4 +24,8 @@ public interface AuthorizationRepository extends JpaRepository<Authorization, St
             " or a.deviceCodeValue = :token"
     )
     Optional<Authorization> findByStateOrAuthorizationCodeValueOrAccessTokenValueOrRefreshTokenValueOrOidcIdTokenValueOrUserCodeValueOrDeviceCodeValue(@Param("token") String token);
+
+    void deleteByUid(UUID uuid);
+
+    Optional<Authorization> findAuthorizationByUid(UUID uuid);
 }

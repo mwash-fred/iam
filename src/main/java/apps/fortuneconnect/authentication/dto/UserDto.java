@@ -25,8 +25,6 @@ public record UserDto(
         LocalDateTime postedTime,
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         LocalDateTime modifiedTime,
-        LocalDateTime verifiedTime,
-        Boolean verifiedFlag,
         Boolean deletedFlag,
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         Boolean firstLogin,

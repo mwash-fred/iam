@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    container_name: 'elimika-db'
+    environment:
+      - 'POSTGRES_DB=whoami'
+      - 'POSTGRES_PASSWORD=educacion'
+      - 'POSTGRES_USER=admin'
+    ports:
+      - '5432:5432'
+    restart: unless-stopped
