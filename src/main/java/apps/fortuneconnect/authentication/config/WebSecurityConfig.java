@@ -17,7 +17,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -57,7 +56,7 @@ import static apps.fortuneconnect.authentication.resources.AuthenticateWebContro
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-    public static final String LOGIN_PAGE_PATH = "/" + AUTH_REQUEST_PATH_PREFIX + "/"+LOGIN_PATH;
+    public static final String LOGIN_PAGE_PATH = "/" + AUTH_REQUEST_PATH_PREFIX + "/" + LOGIN_PATH;
     private final UsersServiceImpl usersService;
 
     @Bean
@@ -80,28 +79,21 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.debug(false)
-                .ignoring()
-                .requestMatchers("/webjars/**", "/images/**", "/css/**", "/assets/**", "/favicon.ico");
-    }
-
-    @Bean
     @Order(2)
     public SecurityFilterChain appSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(r -> r
-                        .requestMatchers("/.well-known/**").permitAll()
+                        .requestMatchers("/.well-known/**", "/webjars/**", "/img/**", "/css/**", "/assets/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(f -> f.loginPage(LOGIN_PAGE_PATH).permitAll())
                 .oauth2ResourceServer(oauth2ResourceServer ->
-                oauth2ResourceServer.jwt(Customizer.withDefaults()))
+                        oauth2ResourceServer.jwt(Customizer.withDefaults()))
                 .build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(){
+    public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(usersService);
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -143,8 +135,7 @@ public class WebSecurityConfig {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(2048);
             keyPair = keyPairGenerator.generateKeyPair();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new IllegalStateException(ex);
         }
         return keyPair;
@@ -177,15 +168,15 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         DelegatingPasswordEncoder delegatingPasswordEncoder =
-                (DelegatingPasswordEncoder)PasswordEncoderFactories.createDelegatingPasswordEncoder();
+                (DelegatingPasswordEncoder) PasswordEncoderFactories.createDelegatingPasswordEncoder();
         delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(new BCryptPasswordEncoder());
         return delegatingPasswordEncoder;
     }
 
     @Bean
-    public RestTemplate restTemplate(){
+    public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 }
